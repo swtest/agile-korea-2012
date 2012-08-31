@@ -72,10 +72,11 @@ public class CustomerDaoPojoImplTest {
     @Test
     public void testReadCustomerByNo() {
         // 1. 조회
-        CustomerDto result = this.dao.readCustomerByNo(1L);
+        Long customerNo = 1L;
+        CustomerDto result = this.dao.readCustomerByNo(customerNo);
 
         // 2. 검증
-        assertCustomer(result, createCustomer(1L, "최영목", "davidchoi@nextree.co.kr"));
+        assertCustomer(result, createCustomer(customerNo, "최영목", "davidchoi@nextree.co.kr"));
     }
 
     /**
@@ -84,8 +85,9 @@ public class CustomerDaoPojoImplTest {
     @Test
     public void testUpdateCustomer() {
         // 1. 수정 전 검증
-        CustomerDto readCustomer = this.dao.readCustomerByNo(1L);
-        assertCustomer(readCustomer, createCustomer(1L, "최영목", "davidchoi@nextree.co.kr"));
+        Long customerNo = 1L;
+        CustomerDto readCustomer = this.dao.readCustomerByNo(customerNo);
+        assertCustomer(readCustomer, createCustomer(customerNo, "최영목", "davidchoi@nextree.co.kr"));
 
         // 2. 수정
         CustomerDto customer = readCustomer;
@@ -93,7 +95,7 @@ public class CustomerDaoPojoImplTest {
         customer.setEmail("gdhong@nextree.co.kr");
 
         // 3. 수정 후 검증
-        readCustomer = this.dao.readCustomerByNo(1L);
+        readCustomer = this.dao.readCustomerByNo(customerNo);
         assertCustomer(customer, readCustomer);
     }
 

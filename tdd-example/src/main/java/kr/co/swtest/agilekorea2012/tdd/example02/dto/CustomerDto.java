@@ -27,6 +27,26 @@ public class CustomerDto implements Serializable {
     private String email;
 
     // -------------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------------
+
+    /**
+     * 기본 생성자
+     */
+    public CustomerDto() {
+        // 아무 일도 하지 않음
+    }
+
+    /**
+     * 생성자
+     *
+     * @param customerNo 고객번호
+     */
+    public CustomerDto(Long customerNo) {
+        this.customerNo = customerNo;
+    }
+
+    // -------------------------------------------------------------------------
     // Getter and Setter
     // -------------------------------------------------------------------------
 
