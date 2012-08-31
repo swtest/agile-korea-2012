@@ -2,44 +2,49 @@
  * Copyright(c) 2012 SWTEST. All rights reserved.
  * This software is the proprietary information of SWTEST.
  *******************************************************************************/
-package kr.co.swtest.agilekorea2012.tdd.example02.dao.impl;
+package kr.co.swtest.agilekorea2012.tdd.example02.service.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import kr.co.swtest.agilekorea2012.tdd.example02.dao.AccountDao;
+import kr.co.swtest.agilekorea2012.tdd.example02.dao.impl.AccountDaoPojoImpl;
+import kr.co.swtest.agilekorea2012.tdd.example02.dao.impl.CustomerDaoPojoImpl;
 import kr.co.swtest.agilekorea2012.tdd.example02.dto.AccountDto;
 import kr.co.swtest.agilekorea2012.tdd.example02.dto.CustomerDto;
+import kr.co.swtest.agilekorea2012.tdd.example02.service.AccountService;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * AccountDaoPojoImpl 테스트케이스
+ * AccountServiceImpl 테스트케이스
  *
  * @author <a href="mailto:scroogy@swtest.co.kr">최영목</a>
  * @since 2012. 9. 1.
  */
-public class AccountDaoPojoImplTest {
+public class AccountServiceImplTest {
 
-    /** 계좌 DAO : SUT(테스트대상, System Under Test) */
-    private AccountDao dao;
+    /** 계좌 서비스 : SUT(테스트대상, System Under Test) */
+    private AccountService service;
 
     /**
      * Setup (Test Fixture 구성)
      */
     @Before
     public void before() {
+        AccountServiceImpl serviceImpl = new AccountServiceImpl();
+
         SortedMap<String, AccountDto> accountMap = new TreeMap<String, AccountDto>();
         accountMap.put("13-1", createAccount("13-1", 1L, 1000L));
         accountMap.put("13-2", createAccount("13-2", 2L, 500L));
+        serviceImpl.setAccountDao(new AccountDaoPojoImpl(accountMap));
 
-        this.dao = new AccountDaoPojoImpl(accountMap);
+        serviceImpl.setCustomerDao(new CustomerDaoPojoImpl());
+
+        this.service = serviceImpl;
     }
 
     /**
@@ -47,7 +52,7 @@ public class AccountDaoPojoImplTest {
      */
     @After
     public void after() {
-        this.dao = null;
+        this.service = null;
     }
 
     // -------------------------------------------------------------------------
@@ -55,73 +60,27 @@ public class AccountDaoPojoImplTest {
     // -------------------------------------------------------------------------
 
     /**
-     * 계좌 추가 테스트
+     * 계좌이체 테스트
+     * <pre>
+     * 테스트 시나리오
+     *
+     * "13-1"번 계좌는 1000원이 있음.
+     * "13-2"번 계좌는 500원이 있음.
+     * "13-1"번 계좌에서 "13-2"번 계좌로 200원을 이체
+     * 예상되는 결과는 "13-1"번 계좌에 800원이 남아있고, "13-2"번 계좌에 200원이 남아있음.
+     * </pre>
      */
     @Test
-    public void testCreateAccount() {
-        // 1. 추가 전 검증
-        AccountDto createAccount = createAccount("13-3", 3L, 2000L);
-
-        AccountDto readAccount = this.dao.readAccount(createAccount.getAccountNo());
-        assertNull(readAccount);
-
-        // 2. 추가
-        this.dao.createAccount(createAccount);
-
-        // 3. 추가 후 검증
-        readAccount = this.dao.readAccount(createAccount.getAccountNo());
-        assertAccount(createAccount, readAccount);
-    }
-
-    /**
-     * 계좌 조회 테스트
-     */
-    @Test
-    public void testReadAccount() {
-        // 1. 조회
-        String accountNo = "13-1";
-        AccountDto result = this.dao.readAccount(accountNo);
+    public void testDoAccountTransfer() {
+        // 1. 이체
+        this.service.doAccountTransfer("13-1", "13-2", 200L);
 
         // 2. 검증
-        assertAccount(createAccount(accountNo, 1L, 1000L), result);
-    }
+        AccountDto senderAccount = this.service.readAccount("13-1");
+        assertAccount(createAccount("13-1", 1L, 800L), senderAccount);
 
-    /**
-     * 계좌 수정 테스트
-     */
-    @Test
-    public void testUpdateAccount() {
-        // 1. 수정 전 검증
-        String accountNo = "13-1";
-        AccountDto readAccount = this.dao.readAccount(accountNo);
-        assertAccount(createAccount(accountNo, 1L, 1000L), readAccount);
-
-        // 2. 수정
-        AccountDto account = readAccount;
-        account.setCustomer(new CustomerDto(2L));
-        account.setBalance(3000L);
-
-        // 3. 수정 후 검증
-        readAccount = this.dao.readAccount(accountNo);
-        assertAccount(account, readAccount);
-    }
-
-    /**
-     * 계좌 삭제 테스트
-     */
-    @Test
-    public void testDeleteAccount() {
-        // 1. 삭제 전 검증
-        String accountNo = "13-1";
-        AccountDto readAccount = this.dao.readAccount(accountNo);
-        assertNotNull(readAccount);
-
-        // 2. 삭제
-        this.dao.deleteAccount(accountNo);
-
-        // 3. 삭제 후 검증
-        readAccount = this.dao.readAccount(accountNo);
-        assertNull(readAccount);
+        AccountDto receiverAccount = this.service.readAccount("13-2");
+        assertAccount(createAccount("13-2", 2L, 700L), receiverAccount);
     }
 
     // -------------------------------------------------------------------------

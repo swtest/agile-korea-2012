@@ -4,6 +4,7 @@
  *******************************************************************************/
 package kr.co.swtest.agilekorea2012.tdd.example02.dao.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import kr.co.swtest.agilekorea2012.tdd.example02.dao.CustomerDao;
@@ -23,6 +24,13 @@ public class CustomerDaoPojoImpl implements CustomerDao {
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
+
+    /**
+     * 奄沙 持失切
+     */
+    public CustomerDaoPojoImpl() {
+        this.customerMap = new HashMap<Long, CustomerDto>();
+    }
 
     /**
      * 持失切

@@ -29,6 +29,9 @@ public class CustomerDaoPojoImplTest {
     /** 고객 DAO : SUT(테스트대상, System Under Test) */
     private CustomerDao dao;
 
+    /**
+     * Setup (Test Fixture 구성)
+     */
     @Before
     public void before() {
         Map<Long, CustomerDto> customerMap = new HashMap<Long, CustomerDto>();
@@ -38,9 +41,12 @@ public class CustomerDaoPojoImplTest {
         this.dao = new CustomerDaoPojoImpl(customerMap);
     }
 
+    /**
+     * TearDown (Test Fixture 초기화)
+     */
     @After
     public void after() {
-
+        this.dao = null;
     }
 
     // -------------------------------------------------------------------------

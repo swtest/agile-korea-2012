@@ -5,6 +5,7 @@
 package kr.co.swtest.agilekorea2012.tdd.example02.dao.impl;
 
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import kr.co.swtest.agilekorea2012.tdd.example02.dao.AccountDao;
 import kr.co.swtest.agilekorea2012.tdd.example02.dto.AccountDto;
@@ -23,6 +24,13 @@ public class AccountDaoPojoImpl implements AccountDao {
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
+
+    /**
+     * 奄沙 持失切
+     */
+    public AccountDaoPojoImpl() {
+        this.accountMap = new TreeMap<String, AccountDto>();
+    }
 
     /**
      * 持失切
