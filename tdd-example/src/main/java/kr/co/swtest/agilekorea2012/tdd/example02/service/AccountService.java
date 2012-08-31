@@ -15,7 +15,7 @@ import kr.co.swtest.agilekorea2012.tdd.example02.dto.AccountDto;
 public interface AccountService {
 
     /**
-     * 계좌이체
+     * 계좌 이체
      *
      * @param sendAccountNo 송금계좌번호
      * @param receiveAccountNo 수신계좌번호
